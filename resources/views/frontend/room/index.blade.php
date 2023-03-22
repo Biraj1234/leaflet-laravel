@@ -25,21 +25,21 @@
                             <td>{{ $room->title }}</td>
                             <td>{{ $room->address }}</td>
                             <td>{{ $room->latitude . ',' . $room->longitude }}</td>
-                            <td>
+                            <td class="d-flex">
                                 <form action="{{ route('rooms.destroy', $room->id) }}" method="post">
                                     <button class="btn btn-danger btn-sm" type="submit"><i
                                             class="fas fa-trash"></i></button>
                                     @method('delete')
                                     @csrf
                                 </form>
+                                <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-info btn-sm"><i
+                                        class="fas fa-eye"></i></a>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
-
-
     </div>
 
     <div class="card m-4">
@@ -54,15 +54,6 @@
     <script>
         //Map Initialization
         var lists = L.map("lists").setView([27.685178441044187, 85.32034981801917], 16);
-        var currentMarker = null;
-        var testMarker = null;
-
-        // //OSM layer
-        // var osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        //     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        // });
-        // osm.addTo(lists);
-
 
         var googleStreets = L.tileLayer("http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
             maxZoom: 20,
@@ -72,29 +63,5 @@
         googleStreets.addTo(lists);
 
         L.marker([27.685178441044187, 85.32034981801917]).addTo(lists);
-
-
-        // Marker
-        var myIcon = L.icon({
-            iconUrl: "red_marker.png",
-            iconSize: [40, 40],
-        });
-
-        map.on("click", function(e) {
-            let lat = e.latlng.lat;
-            let long = e.latlng.lng;
-            $("#lat").val(lat);
-            $("#long").val(long);
-            $("#latlong").val(lat + "," + long);
-
-            map.removeLayer(testMarker);
-            if (currentMarker) {
-                map.removeLayer(currentMarker);
-            }
-
-            currentMarker = L.marker(e.latlng);
-
-            currentMarker.addTo(map);
-        });
     </script>
 @endsection

@@ -42,7 +42,11 @@ class RoomController extends Controller
 
     public function show(Room $room)
     {
-        //
+        $data = [
+            'room' => $room
+        ];
+
+        return view('frontend.room.show', $data);
     }
 
 
