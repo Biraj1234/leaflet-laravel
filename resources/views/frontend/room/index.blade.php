@@ -27,12 +27,12 @@
                             <td>{{ $room->latitude . ',' . $room->longitude }}</td>
                             <td>
 
-                                <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-primary btn-sm ml-2"><i
+                                <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-primary btn-sm ml-2"><i
                                         class="fas fa-pen"></i></a>
                                 <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-info btn-sm ml-2"><i
                                         class="fas fa-eye"></i></a>
 
-                                <!-- Button trigger modal -->
+
                                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
                                     data-target="#exampleModal">
                                     <i class="fas fa-trash"></i>
@@ -64,7 +64,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </td>
                         </tr>
                     @endforeach
@@ -84,25 +83,21 @@
 @section('script')
     <script>
         let rooms = '{!! $rooms !!}';
-
         let roomMarkers = JSON.parse(rooms);
-
-        console.log(roomMarkers);
-
         //Map Initialization
         var lists = L.map("lists").setView([27.7007347740801, 85.32650587915138], 13);
-
         var googleStreets = L.tileLayer("http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
             maxZoom: 20,
             subdomains: ["mt0", "mt1", "mt2", "mt3"],
         });
-
         googleStreets.addTo(lists);
-
         // Add the markers and popups
         for (var i = 0; i < roomMarkers.length; i++) {
             var markerss = L.marker([roomMarkers[i].latitude, roomMarkers[i].longitude]).addTo(lists);
-            markerss.bindPopup("<b>" + "<a href='{{ route('rooms.show', 1) }}'>" + roomMarkers[i].title + "</a>" +
+            let id = roomMarkers[i].id;
+
+            markerss.bindPopup("<b>" + "<a href='{{ route('rooms.show', ':id') }}'>" + roomMarkers[i].title +
+                "</a>" +
                 "</b><br>" + roomMarkers[i]
                 .address);
         }

@@ -8,18 +8,21 @@
         </div>
 
         <div class="card-body">
-            <form action="{{ route('rooms.store') }}" method="POST">
+            <form action="{{ isset($item) ? route('rooms.update', $item->id) : route('rooms.store') }}" method="POST">
+                @if (isset($item))
+                    @method('PUT')
+                @endif
                 @csrf
                 <div class="mb-3 row">
                     <label for="staticEmail" class="col-sm-2 col-form-label">Title</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="title">
+                        <input type="text" class="form-control" name="title" value="{{ $item->title ?? '' }}">
                     </div>
                 </div>
                 <div class="mb-3 row">
                     <label for="inputPassword" class="col-sm-2 col-form-label">Address</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="address">
+                        <input type="text" class="form-control" name="address" value="{{ $item->address ?? '' }}">
                     </div>
                 </div>
 
@@ -35,7 +38,8 @@
                 <div class="mb-3 row">
                     <label for="inputPassword" class="col-sm-2 col-form-label">Latitude</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="lat" name="latitude" readonly>
+                        <input type="text" class="form-control" id="lat" value="{{ $item->latitude ?? '' }}"
+                            name="latitude" readonly>
                     </div>
                 </div>
 
@@ -43,12 +47,13 @@
                 <div class="mb-3 row">
                     <label for="inputPassword" class="col-sm-2 col-form-label">Longitude</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="long" name="longitude" readonly>
+                        <input type="text" class="form-control" id="long" name="longitude"
+                            value="{{ $item->longitude ?? '' }}" readonly>
                     </div>
                 </div>
 
                 <div class="col-sm-10">
-                    <button class="btn btn-success btn-sm">Save</button>
+                    <button class="btn btn-success btn-sm"><i class="far fa-save"></i> Save</button>
                 </div>
             </form>
         </div>
@@ -60,6 +65,7 @@
         //Map Initialization
         var map = L.map("map").setView([0, 0], 13);
         var currentMarker = null;
+        var item = '{!! $item ?? '' !!}';
         var testMarker = null;
         //OSM layer
         var osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -67,20 +73,30 @@
         });
         osm.addTo(map);
 
+
+
+
         // Get the current location using the Geolocation API
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                // Create a marker with the current location and add it to the map
-                testMarker = L.marker([position.coords.latitude, position.coords.longitude]);
-                $("#lat").val(position.coords.latitude);
-                $("#long").val(position.coords.longitude);
-                testMarker.addTo(map);
-                // Set the view of the map to the current location
-                map.setView([position.coords.latitude, position.coords.longitude], 16);
-            });
+        if (!item) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    // Create a marker with the current location and add it to the map
+                    testMarker = L.marker([position.coords.latitude, position.coords.longitude]);
+                    $("#lat").val(position.coords.latitude);
+                    $("#long").val(position.coords.longitude);
+                    testMarker.addTo(map);
+                    // Set the view of the map to the current location
+                    map.setView([position.coords.latitude, position.coords.longitude], 16);
+                });
+            }
         } else {
-            alert("Geolocation is not supported by this browser.");
+            let oldMarker = JSON.parse(item);
+            map.setView([oldMarker.latitude, oldMarker.longitude], 16);
+            testMarker = L.marker([oldMarker.latitude, oldMarker.longitude]);
+            testMarker.addTo(map);
         }
+
+
 
         var googleStreets = L.tileLayer("http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
             maxZoom: 20,
@@ -108,9 +124,7 @@
             if (currentMarker) {
                 map.removeLayer(currentMarker);
             }
-
             currentMarker = L.marker(e.latlng);
-
             currentMarker.addTo(map);
         });
     </script>

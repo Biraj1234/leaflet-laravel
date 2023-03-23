@@ -52,7 +52,10 @@ class RoomController extends Controller
 
     public function edit(Room $room)
     {
-        //
+        $data = [
+            'item' => $room
+        ];
+        return view('frontend.room.form', $data);
     }
 
     /**
@@ -60,7 +63,9 @@ class RoomController extends Controller
      */
     public function update(Request $request, Room $room)
     {
-        //
+        $data = $request->except('_token');
+        $room->update($data);
+        return redirect()->route('rooms.index');
     }
 
     /**
