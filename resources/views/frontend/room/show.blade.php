@@ -4,14 +4,12 @@
     <div class="card m-4">
         <div class="card-header d-flex justify-content-between">
             <span>Room</span>
-            <a href="{{ route('rooms.create') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Create</a>
+            <a href="{{ route('rooms.index') }}" class="btn btn-success btn-sm"><i class="fas fa-list-ul"></i> List</a>
         </div>
 
         <div class="card-body">
-
             <div class="row p-1">
                 <div class="col border p-4">
-
                     {{-- Title --}}
                     <div class="mb-3 row">
                         <label for="staticEmail" class="col-sm-3 col-form-label"><b>Title</b></label>
@@ -52,11 +50,8 @@
     <script>
         let lat = '{{ $room->latitude }}';
         let long = '{{ $room->longitude }}';
-
-
         //Map Initialization
         var lists = L.map("lists").setView([lat, long], 16);
-
         var googleStreets = L.tileLayer("http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
             maxZoom: 20,
             subdomains: ["mt0", "mt1", "mt2", "mt3"],

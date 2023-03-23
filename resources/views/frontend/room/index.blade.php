@@ -52,8 +52,14 @@
 
 @section('script')
     <script>
+        let rooms = '{!! $rooms !!}';
+
+        let roomMarkers = JSON.parse(rooms);
+
+        console.log(roomMarkers);
+
         //Map Initialization
-        var lists = L.map("lists").setView([27.685178441044187, 85.32034981801917], 16);
+        var lists = L.map("lists").setView([27.7007347740801, 85.32650587915138], 13);
 
         var googleStreets = L.tileLayer("http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
             maxZoom: 20,
@@ -62,6 +68,34 @@
 
         googleStreets.addTo(lists);
 
-        L.marker([27.685178441044187, 85.32034981801917]).addTo(lists);
+
+        var markers = [{
+                lat: 51.5,
+                lng: -0.1,
+                name: "Marker 1",
+                info: "This is marker 1",
+            },
+            {
+                lat: 51.51,
+                lng: -0.12,
+                name: "Marker 2",
+                info: "This is marker 2",
+            },
+            {
+                lat: 51.49,
+                lng: -0.08,
+                name: "Marker 3",
+                info: "This is marker 3",
+            },
+        ];
+
+        console.log(markers);
+
+
+        // Add the markers and popups
+        for (var i = 0; i < roomMarkers.length; i++) {
+            var markerss = L.marker([roomMarkers[i].latitude, roomMarkers[i].longitude]).addTo(lists);
+            markerss.bindPopup("<b>" + roomMarkers[i].title + "</b><br>" + roomMarkers[i].address);
+        }
     </script>
 @endsection
