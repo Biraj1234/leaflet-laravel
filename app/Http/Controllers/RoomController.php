@@ -17,7 +17,7 @@ class RoomController extends Controller
     public function index()
     {
         $data = [
-            'rooms' => $this->model->get()
+            'rooms' => $this->model->orderBy('created_at', 'DESC')->get()
         ];
         return view('frontend.room.index', $data);
     }

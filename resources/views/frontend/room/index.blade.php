@@ -19,21 +19,52 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($rooms as $room)
+                    @foreach ($rooms as $key => $room)
                         <tr>
-                            <th scope="row">1</th>
+                            <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $room->title }}</td>
                             <td>{{ $room->address }}</td>
                             <td>{{ $room->latitude . ',' . $room->longitude }}</td>
-                            <td class="d-flex">
-                                <form action="{{ route('rooms.destroy', $room->id) }}" method="post">
-                                    <button class="btn btn-danger btn-sm" type="submit"><i
-                                            class="fas fa-trash"></i></button>
-                                    @method('delete')
-                                    @csrf
-                                </form>
-                                <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-info btn-sm"><i
+                            <td>
+
+                                <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-primary btn-sm ml-2"><i
+                                        class="fas fa-pen"></i></a>
+                                <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-info btn-sm ml-2"><i
                                         class="fas fa-eye"></i></a>
+
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                    data-target="#exampleModal">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
+
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete this?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary btn-sm"
+                                                    data-dismiss="modal">Close</button>
+
+                                                <form action="{{ route('rooms.destroy', $room->id) }}" method="post">
+                                                    <button class="btn btn-danger btn-sm mr-1" type="submit">Yes</button>
+                                                    @method('delete')
+                                                    @csrf
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </td>
                         </tr>
                     @endforeach
@@ -68,34 +99,12 @@
 
         googleStreets.addTo(lists);
 
-
-        var markers = [{
-                lat: 51.5,
-                lng: -0.1,
-                name: "Marker 1",
-                info: "This is marker 1",
-            },
-            {
-                lat: 51.51,
-                lng: -0.12,
-                name: "Marker 2",
-                info: "This is marker 2",
-            },
-            {
-                lat: 51.49,
-                lng: -0.08,
-                name: "Marker 3",
-                info: "This is marker 3",
-            },
-        ];
-
-        console.log(markers);
-
-
         // Add the markers and popups
         for (var i = 0; i < roomMarkers.length; i++) {
             var markerss = L.marker([roomMarkers[i].latitude, roomMarkers[i].longitude]).addTo(lists);
-            markerss.bindPopup("<b>" + roomMarkers[i].title + "</b><br>" + roomMarkers[i].address);
+            markerss.bindPopup("<b>" + "<a href='{{ route('rooms.show', 1) }}'>" + roomMarkers[i].title + "</a>" +
+                "</b><br>" + roomMarkers[i]
+                .address);
         }
     </script>
 @endsection

@@ -89,6 +89,8 @@
 
         googleStreets.addTo(map);
 
+        L.Control.geocoder().addTo(map);
+
         // Marker
         var myIcon = L.icon({
             iconUrl: "red_marker.png",
