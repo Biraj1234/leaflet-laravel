@@ -36,6 +36,7 @@
                                 value="{{ $room->latitude }}, {{ $room->longitude }}">
                         </div>
                     </div>
+                    <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-success btn-sm">Edit</a>
                 </div>
                 <div class="col border">
                     <div id="lists" style="height:40rem"></div>

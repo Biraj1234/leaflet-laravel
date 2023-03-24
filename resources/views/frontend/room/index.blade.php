@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-    <div class="card m-4">
+    <div class="card">
         <div class="card-header d-flex justify-content-between">
             <span>Room</span>
             <a href="{{ route('rooms.create') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Create</a>
@@ -84,6 +84,7 @@
     <script>
         let rooms = '{!! $rooms !!}';
         let roomMarkers = JSON.parse(rooms);
+        // let id = null;
         //Map Initialization
         var lists = L.map("lists").setView([27.7007347740801, 85.32650587915138], 13);
         var googleStreets = L.tileLayer("http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
@@ -95,11 +96,10 @@
         for (var i = 0; i < roomMarkers.length; i++) {
             var markerss = L.marker([roomMarkers[i].latitude, roomMarkers[i].longitude]).addTo(lists);
             let id = roomMarkers[i].id;
-
-            markerss.bindPopup("<b>" + "<a href='{{ route('rooms.show', ':id') }}'>" + roomMarkers[i].title +
-                "</a>" +
-                "</b><br>" + roomMarkers[i]
-                .address);
+            let url = "{{ route('rooms.show', ':id') }}";
+            url = url.replace(':id', id);
+            markerss.bindPopup('<b><a href="' + url + '"/>' + roomMarkers[i].title +
+                "</a></b><br>" + roomMarkers[i].address);
         }
     </script>
 @endsection
